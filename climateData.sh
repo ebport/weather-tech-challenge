@@ -27,9 +27,11 @@ if wget --spider $base$file_pre$curr_suffix 2>/dev/null; then # Does this line a
   file=$file_pre$curr_suffix; 
 else
   file=$file_pre$prev_suffix;
+  echo used previous;
 fi
 
 wget -P $WORKDIR/ $base$file
+echo file $file
 stat ./working/stations.tsv | grep 'Modify: ' | cut -d' ' -f2,3,4 > $WORKDIR/ts.txt
 
 # Write bad and good records fields 9-12 TODO: Output to working dir
@@ -43,7 +45,7 @@ gawk -v good=$good -v bad=$bad '{ if ($13==-9999.0 || $10==-9999.0 || $11==-9999
 awk -v OFS=, '{ print $1,$2,$3,$10,$11,$4,$5,$12,$6,$7,$8,$9 }' <(join <(sort <(awk '{ print $1,$2,$3,$7,$8,$10,$11,$12,$13 }' $WORKDIR/good-records.txt)) <(sort <(awk -F'\t' '{ print $1,$2,$3,$9 }' $WORKDIR/stations.tsv))) > $WORKDIR/output-data.csv
 
 # Zip up all output into output dir
-outputfile=$(sed 's/[-:]//g' ts.txt | cut -d'.' -f1 | tr " " "-")
+outputfile=$(sed 's/[-:]//g' $WORKDIR/ts.txt | cut -d'.' -f1 | tr " " "-")
 zip ./$OUTPUTDIR/$outputfile.zip ./$WORKDIR/{output-data.csv,good-records.txt,bad-records.txt,$file}
 
 # clean up working dir
