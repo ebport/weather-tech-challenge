@@ -32,7 +32,7 @@ fi
 
 wget -P $WORKDIR/ $base$file
 echo file $file
-stat ./working/stations.tsv | grep 'Modify: ' | cut -d' ' -f2,3,4 > $WORKDIR/ts.txt
+stat $WORKDIR/$file | grep 'Modify: ' | cut -d' ' -f2,3,4 > $WORKDIR/ts.txt
 
 # Write bad and good records fields 9-12 TODO: Output to working dir
 good=$WORKDIR'/good-records.txt'
@@ -46,8 +46,8 @@ awk -v OFS=, '{ print $1,$2,$3,$10,$11,$4,$5,$12,$6,$7,$8,$9 }' <(join <(sort <(
 
 # Zip up all output into output dir
 outputfile=$(sed 's/[-:]//g' $WORKDIR/ts.txt | cut -d'.' -f1 | tr " " "-")
-zip ./$OUTPUTDIR/$outputfile.zip ./$WORKDIR/{output-data.csv,good-records.txt,bad-records.txt,$file}
-
+zip $OUTPUTDIR/$outputfile.zip $WORKDIR/{output-data.csv,good-records.txt,bad-records.txt,$file}
+echo $OUTPUTDIR/$outputfile.zip
 # clean up working dir
 rm -r $WORKDIR
 
