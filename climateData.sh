@@ -1,5 +1,5 @@
 #!/bin/bash
-# Bash Scripting Tech Challenge - https://captechventuresinc.sharepoint.com/sites/SO/DI/Pages/Tech-Challenges.aspx
+# Bash Scripting Exercise - CTV
 # Store arguments in array
 args=("@")
 echo $@ $#
